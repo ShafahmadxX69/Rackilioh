@@ -1,6 +1,7 @@
 let currentLevel = 1;
+let storedItems = [];
 
-// Buat peta rak saat load
+// Buat denah rak
 window.onload = () => {
   renderRacks();
 };
@@ -11,7 +12,7 @@ function changeLevel(level) {
   renderRacks();
 }
 
-// Render rak 1.1A - 1.12H
+// Render rak A-H, 12 kolom
 function renderRacks() {
   const rackMap = document.getElementById("rack-map");
   rackMap.innerHTML = "";
@@ -53,8 +54,43 @@ document.getElementById("itemForm").addEventListener("submit", function(e) {
   const color = document.getElementById("color").value;
   const qty = document.getElementById("qty").value;
 
-  alert(`Saved:\nRack: ${rack}\nPO: ${po}\nMaterial: ${material}\nSize: ${size}\nColor: ${color}\nQTY: ${qty}`);
-  
+  // Simpan data ke array
+  storedItems.push({ rack, po, material, size, color, qty });
+
+  alert(`Saved to ${rack}`);
+
   this.reset();
   document.querySelectorAll(".rack").forEach(r => r.classList.remove("selected"));
 });
+
+// Toggle section
+function showSection(section) {
+  document.getElementById("input-section").classList.add("hidden");
+  document.getElementById("check-section").classList.add("hidden");
+
+  if (section === "input") {
+    document.getElementById("input-section").classList.remove("hidden");
+  } else if (section === "check") {
+    document.getElementById("check-section").classList.remove("hidden");
+    renderTable();
+  }
+}
+
+// Render tabel items
+function renderTable() {
+  const tbody = document.getElementById("itemsTable");
+  tbody.innerHTML = "";
+
+  storedItems.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.rack}</td>
+      <td>${item.po}</td>
+      <td>${item.material}</td>
+      <td>${item.size}</td>
+      <td>${item.color}</td>
+      <td>${item.qty}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
