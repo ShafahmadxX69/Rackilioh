@@ -11,18 +11,22 @@ h1 {
 }
 
 .levels {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 20px;
+  top: 100px;
 }
 
 .levels button {
-  margin: 5px;
-  padding: 10px 15px;
-  font-size: 16px;
+  margin: 5px 0;
+  padding: 15px;
+  border-radius: 50%;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
   background: #4cafef;
   color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .levels button:hover {
@@ -34,7 +38,7 @@ h1 {
   grid-template-columns: repeat(12, 60px);
   gap: 8px;
   justify-content: center;
-  margin-bottom: 30px;
+  margin: 50px auto;
 }
 
 .rack {
@@ -54,18 +58,41 @@ h1 {
   color: white;
 }
 
-.form-container {
-  max-width: 400px;
-  margin: 0 auto;
+.toggle-buttons {
+  margin: 20px;
+}
+
+.toggle-buttons button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #4cafef;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toggle-buttons button:hover {
+  background: #357ab8;
+}
+
+.section {
+  max-width: 700px;
+  margin: 20px auto;
   text-align: left;
 }
 
-.form-container label {
+.hidden {
+  display: none;
+}
+
+form label {
   display: block;
   margin-top: 10px;
 }
 
-.form-container input {
+form input {
   width: 100%;
   padding: 8px;
   margin-top: 3px;
@@ -73,7 +100,7 @@ h1 {
   border-radius: 5px;
 }
 
-.form-container button {
+form button {
   margin-top: 15px;
   width: 100%;
   padding: 10px;
@@ -85,6 +112,17 @@ h1 {
   cursor: pointer;
 }
 
-.form-container button:hover {
+form button:hover {
   background: #357ab8;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
 }
