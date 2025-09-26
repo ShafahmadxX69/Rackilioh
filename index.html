@@ -8,19 +8,25 @@
 <body>
   <h1>Choose the Rack</h1>
 
-  <!-- Selector Tingkat -->
+  <!-- Selector Level -->
   <div class="levels">
-    <button onclick="changeLevel(1)">Level 1</button>
-    <button onclick="changeLevel(2)">Level 2</button>
-    <button onclick="changeLevel(3)">Level 3</button>
+    <button onclick="changeLevel(1)">1</button>
+    <button onclick="changeLevel(2)">2</button>
+    <button onclick="changeLevel(3)">3</button>
   </div>
 
-  <!-- Area Peta Rak -->
+  <!-- Denah Racks -->
   <div id="rack-map" class="rack-map"></div>
 
-  <!-- Form Input -->
-  <div class="form-container">
-    <h2>Item Details</h2>
+  <!-- Toggle Buttons -->
+  <div class="toggle-buttons">
+    <button onclick="showSection('input')">INPUT</button>
+    <button onclick="showSection('check')">CHECK</button>
+  </div>
+
+  <!-- Input Section -->
+  <div id="input-section" class="section hidden">
+    <h2>Item Input</h2>
     <form id="itemForm">
       <label>No PO</label>
       <input type="text" id="po" required>
@@ -41,6 +47,24 @@
 
       <button type="submit">Save Item</button>
     </form>
+  </div>
+
+  <!-- Check Section -->
+  <div id="check-section" class="section hidden">
+    <h2>Stored Items</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rack</th>
+          <th>No PO</th>
+          <th>Material No</th>
+          <th>Size</th>
+          <th>Color</th>
+          <th>QTY</th>
+        </tr>
+      </thead>
+      <tbody id="itemsTable"></tbody>
+    </table>
   </div>
 
   <script src="script.js"></script>
