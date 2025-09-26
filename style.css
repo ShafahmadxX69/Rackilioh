@@ -1,0 +1,90 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.levels {
+  margin-bottom: 20px;
+}
+
+.levels button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #4cafef;
+  color: white;
+}
+
+.levels button:hover {
+  background: #357ab8;
+}
+
+.rack-map {
+  display: grid;
+  grid-template-columns: repeat(12, 60px);
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.rack {
+  width: 60px;
+  height: 40px;
+  border: 2px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: white;
+  border-radius: 5px;
+}
+
+.rack.selected {
+  background: #4caf50;
+  color: white;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 10px;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 3px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.form-container button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: #4cafef;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background: #357ab8;
+}
