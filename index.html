@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Warehouse Rack Selector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Choose the Rack</h1>
+
+  <!-- Selector Tingkat -->
+  <div class="levels">
+    <button onclick="changeLevel(1)">Level 1</button>
+    <button onclick="changeLevel(2)">Level 2</button>
+    <button onclick="changeLevel(3)">Level 3</button>
+  </div>
+
+  <!-- Area Peta Rak -->
+  <div id="rack-map" class="rack-map"></div>
+
+  <!-- Form Input -->
+  <div class="form-container">
+    <h2>Item Details</h2>
+    <form id="itemForm">
+      <label>No PO</label>
+      <input type="text" id="po" required>
+      
+      <label>Material No</label>
+      <input type="text" id="material" required>
+
+      <label>Size</label>
+      <input type="text" id="size">
+
+      <label>Color</label>
+      <input type="text" id="color">
+
+      <label>QTY</label>
+      <input type="number" id="qty" required>
+
+      <input type="hidden" id="selectedRack">
+
+      <button type="submit">Save Item</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
