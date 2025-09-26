@@ -2,71 +2,226 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Warehouse Rack Selector</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Warehouse Layout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-bottom: 15px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .controls button.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .rack-grid {
+      display: grid;
+      grid-template-columns: repeat(26, 45px); /* 12 kiri + jalan kosong + 12 kanan + margin */
+      gap: 5px;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .rack {
+      border: 1px solid #555;
+      background: white;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      height: 35px;
+    }
+
+    .rack:hover {
+      background: #f0f0f0;
+    }
+
+    .empty {
+      background: transparent;
+      border: none;
+      cursor: default;
+    }
+
+    .form-section, .check-section {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .form-section input {
+      margin: 5px;
+      padding: 5px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      margin-top: 10px;
+      width: 80%;
+    }
+
+    table, th, td {
+      border: 1px solid #888;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+
+    .highlight {
+      background: #ffecb3 !important;
+    }
+  </style>
 </head>
 <body>
-  <h1>Choose the Rack</h1>
+  <h2>Choose the Rack</h2>
 
-  <!-- Selector Level -->
-  <div class="levels">
-    <button onclick="changeLevel(1)">1</button>
-    <button onclick="changeLevel(2)">2</button>
-    <button onclick="changeLevel(3)">3</button>
+  <div class="controls">
+    <button id="inputBtn" class="active">INPUT</button>
+    <button id="checkBtn">CHECK</button>
   </div>
 
-  <!-- Denah Racks -->
-  <div id="rack-map" class="rack-map"></div>
-
-  <!-- Toggle Buttons -->
-  <div class="toggle-buttons">
-    <button onclick="showSection('input')">INPUT</button>
-    <button onclick="showSection('check')">CHECK</button>
-  </div>
+  <div id="rackLayout" class="rack-grid"></div>
 
   <!-- Input Section -->
-  <div id="input-section" class="section hidden">
-    <h2>Item Input</h2>
-    <form id="itemForm">
-      <label>No PO</label>
-      <input type="text" id="po" required>
-      
-      <label>Material No</label>
-      <input type="text" id="material" required>
-
-      <label>Size</label>
-      <input type="text" id="size">
-
-      <label>Color</label>
-      <input type="text" id="color">
-
-      <label>QTY</label>
-      <input type="number" id="qty" required>
-
-      <input type="hidden" id="selectedRack">
-
-      <button type="submit">Save Item</button>
-    </form>
+  <div class="form-section" id="formSection">
+    <h3>Input Item for <span id="selectedRack"></span></h3>
+    <input type="text" id="po" placeholder="PO Number">
+    <input type="text" id="material" placeholder="Material No">
+    <input type="text" id="size" placeholder="Size">
+    <input type="text" id="color" placeholder="Color">
+    <input type="number" id="qty" placeholder="QTY">
+    <button onclick="saveItem()">Save</button>
   </div>
 
   <!-- Check Section -->
-  <div id="check-section" class="section hidden">
-    <h2>Stored Items</h2>
-    <table>
+  <div class="check-section" id="checkSection">
+    <h3>Items in <span id="checkRack"></span></h3>
+    <table id="itemsTable">
       <thead>
         <tr>
-          <th>Rack</th>
-          <th>No PO</th>
-          <th>Material No</th>
+          <th>PO</th>
+          <th>Material</th>
           <th>Size</th>
           <th>Color</th>
-          <th>QTY</th>
+          <th>Qty</th>
         </tr>
       </thead>
-      <tbody id="itemsTable"></tbody>
+      <tbody></tbody>
     </table>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const racks = {};
+    const rows = ["A","B","C","D","E","F","G","H"];
+
+    // Build grid layout
+    const grid = document.getElementById("rackLayout");
+    rows.forEach(row => {
+      for (let i = 1; i <= 26; i++) {
+        let cell = document.createElement("div");
+
+        if (i === 13 || i === 14) {
+          cell.className = "empty"; // jalan kosong tengah
+        } else {
+          let num = (i < 13) ? i : i - 2; // geser setelah jalan
+          let rackId = `1.${num}${row}`;
+          cell.className = "rack";
+          cell.textContent = rackId;
+          cell.onclick = () => selectRack(rackId, cell);
+        }
+        grid.appendChild(cell);
+      }
+    });
+
+    let mode = "INPUT";
+    let currentRack = null;
+
+    document.getElementById("inputBtn").onclick = () => {
+      mode = "INPUT";
+      document.getElementById("inputBtn").classList.add("active");
+      document.getElementById("checkBtn").classList.remove("active");
+      document.getElementById("formSection").style.display = "none";
+      document.getElementById("checkSection").style.display = "none";
+    };
+
+    document.getElementById("checkBtn").onclick = () => {
+      mode = "CHECK";
+      document.getElementById("checkBtn").classList.add("active");
+      document.getElementById("inputBtn").classList.remove("active");
+      document.getElementById("formSection").style.display = "none";
+      document.getElementById("checkSection").style.display = "none";
+    };
+
+    function selectRack(rackId, cell) {
+      document.querySelectorAll(".rack").forEach(r => r.classList.remove("highlight"));
+      cell.classList.add("highlight");
+      currentRack = rackId;
+
+      if (mode === "INPUT") {
+        document.getElementById("selectedRack").textContent = rackId;
+        document.getElementById("formSection").style.display = "block";
+        document.getElementById("checkSection").style.display = "none";
+      } else {
+        document.getElementById("checkRack").textContent = rackId;
+        document.getElementById("formSection").style.display = "none";
+        document.getElementById("checkSection").style.display = "block";
+        renderTable(rackId);
+      }
+    }
+
+    function saveItem() {
+      if (!currentRack) return alert("Please select a rack first!");
+      const po = document.getElementById("po").value;
+      const material = document.getElementById("material").value;
+      const size = document.getElementById("size").value;
+      const color = document.getElementById("color").value;
+      const qty = document.getElementById("qty").value;
+
+      if (!po || !material || !size || !color || !qty) return alert("Fill all fields!");
+
+      if (!racks[currentRack]) racks[currentRack] = [];
+      racks[currentRack].push({ po, material, size, color, qty });
+
+      alert("Item saved to " + currentRack);
+
+      document.getElementById("po").value = "";
+      document.getElementById("material").value = "";
+      document.getElementById("size").value = "";
+      document.getElementById("color").value = "";
+      document.getElementById("qty").value = "";
+    }
+
+    function renderTable(rackId) {
+      const tbody = document.querySelector("#itemsTable tbody");
+      tbody.innerHTML = "";
+      if (racks[rackId]) {
+        racks[rackId].forEach(item => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td>${item.po}</td><td>${item.material}</td><td>${item.size}</td><td>${item.color}</td><td>${item.qty}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+  </script>
 </body>
 </html>
